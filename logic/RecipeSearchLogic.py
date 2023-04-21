@@ -6,7 +6,7 @@ class logic:
     def __init__(self):
         connection = db.connect()
         output = db.select_query("recipe", ["id", "name", "instructions", "servings"], "true")
-        print(type())
+        self.recipeDF = pd.DataFrame.from_dict(output)
         connection.close()
 
     def getRecipes(ingredientList):
