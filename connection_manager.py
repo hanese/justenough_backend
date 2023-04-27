@@ -20,7 +20,6 @@ fake_users_db = {
         "full_name": "John Doe",
         "email": "johndoe@example.com",
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
     }
 }
 
@@ -38,7 +37,6 @@ class User(BaseModel):
     username: str
     email: str | None = None
     full_name: str | None = None
-    disabled: bool | None = None
 
 
 class UserInDB(User):
@@ -104,11 +102,3 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     if user is None:
         raise credentials_exception
     return user
-
-
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)]
-):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user

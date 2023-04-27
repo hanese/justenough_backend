@@ -40,13 +40,13 @@ async def login_for_access_token(
 
 @app.get("/users/me/", response_model=connection_manager.User)
 async def read_users_me(
-    current_user: Annotated[connection_manager.User, Depends(connection_manager.get_current_active_user)]
+    current_user: Annotated[connection_manager.User, Depends(connection_manager.get_current_user)]
 ):
     return current_user
 
 
 @app.get("/users/me/items/")
 async def read_own_items(
-    current_user: Annotated[connection_manager.User, Depends(connection_manager.get_current_active_user)]
+    current_user: Annotated[connection_manager.User, Depends(connection_manager.get_current_user)]
 ):
     return [{"item_id": "Foo", "owner": current_user.username}]
