@@ -6,7 +6,7 @@ def connect():
     conn = psycopg2.connect(host="localhost",
                             database="justenough",
                             user="postgres",
-                            password=os.getenv("pgpwd"))
+                            password="postgres")
     return conn
 
 
@@ -47,3 +47,23 @@ def select_query(table: str, columns: list[str], condition: str) -> int or list:
             return res_mapped
     except psycopg2.Error as err:
         return int(err.pgcode)
+
+
+def insert_query_no_columns(table: str, values: list) -> int:
+
+    prepared_list = []
+    for attribute in values:
+        if type(attribute) is str:
+            attribute = attribute.replace("\r\n", "").replace("\n", "").replace("'", "''")
+        prepared_list.append(attribute)
+
+    values_sql = [f"'{val}'" if val else 'NULL' for val in prepared_list]
+    values_sql = ", ".join(values_sql)
+    sql = f"INSERT INTO {table} VALUES ({values_sql});"
+    try:
+        with connect() as con:
+            cur = con.cursor()
+            cur.execute(sql)
+    except psycopg2.DatabaseError as err:
+        return int(err.pgcode)
+    return 0

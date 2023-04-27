@@ -3,23 +3,17 @@ import json
 
 
 class dataGrabber():
-    def getAPICall(self, payload):
+    def getAPICall(self, param):
         """
 		This method will request an API call from the recipe API
+        :param param: the URL ending which defines which api call is made
 		:param payload: Payload text that will be sent to the API
 		:return: Will return ether response or None if there is no result
 		"""
-        url = "https://recipe-by-api-ninjas.p.rapidapi.com/v1/recipe"
+        url = "http://www.themealdb.com/api/json/v2/9973533/"
 
-        querystring = {"query": payload}
 
-        # TODO: Test if API Key also works for different setups
-        headers = {
-            "X-RapidAPI-Key": "7fcf65267cmsh61f9c42d02002edp17ea59jsn6560c0c2ec6e",
-            "X-RapidAPI-Host": "recipe-by-api-ninjas.p.rapidapi.com"
-        }
-
-        response = requests.request("GET", url, headers=headers, params=querystring)
+        response = requests.request("GET", url+param)
         if response.text == "[]":
             response = None
         return response
