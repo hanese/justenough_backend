@@ -45,6 +45,21 @@ def select_query(sql: str, params: tuple) -> int or list[dict[str, any]]:
         return int(err.pgcode)
 
 
+def mapped_select_query(table: str, columns: list[str], condition: str) -> int or list:
+    columns_str = ", ".join(columns)
+    sql = f"SELECT {columns_str} FROM {table} WHERE {condition};"
+
+    try:
+        with connect() as con:
+            cur = con.cursor()
+            cur.execute(sql)
+            res = cur.fetchall()
+            res_mapped = [{f"{col}": f"{val}" for col, val in zip(columns, vals)} for vals in res]
+            return res_mapped
+    except psycopg2.Error as err:
+        return int(err.pgcode)
+
+
 def insert_query_no_columns(table: str, values: list) -> int:
 
     prepared_list = []
