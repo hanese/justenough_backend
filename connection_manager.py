@@ -1,11 +1,15 @@
 from datetime import datetime, timedelta
 from typing import Annotated
-
+import re
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+
+import db
+from db import connect
+import psycopg2.errors
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -13,6 +17,9 @@ SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 fake_users_db = {
     "johndoe": {
@@ -22,6 +29,37 @@ fake_users_db = {
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
     }
 }
+
+
+async def register_user(username: str, password: str):
+    password = pwd_context.hash(password)
+    with connect() as conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute("INSERT INTO users VALUES (%s, %s)",
+                            (username, password))
+            except psycopg2.errors.UniqueViolation:
+                raise HTTPException(status_code=409, detail="username already exists")
+
+
+async def verify_user(username: str, password: str):
+    res = db.select_query("SELECT password FROM users WHERE username = %s", (username,))
+    if not res:
+        return False
+    res = res[0]
+    return pwd_context.verify(password, res[0])
+
+
+async def check_password_complexity(password: str):
+    if len(password) < 8:
+        return False
+    if not re.search("[a-z]", password):
+        return False
+    if not re.search("[A-Z]", password):
+        return False
+    if not re.search("[0-9]", password):
+        return False
+    return True
 
 
 class Token(BaseModel):
@@ -35,42 +73,17 @@ class TokenData(BaseModel):
 
 class User(BaseModel):
     username: str
-    email: str | None = None
-    full_name: str | None = None
+    password: str
 
-
-class UserInDB(User):
-    hashed_password: str
-
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = FastAPI()
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-
-
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
+def get_user(username: str):
+    user = db.select_query("SELECT username, password from users where username = %s", (username,))
+    if user:
+        return User(**dict(username=user[0][0], password=user[0][1]))
+    return False
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -98,7 +111,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(username=token_data.username)
     if user is None:
         raise credentials_exception
     return user

@@ -34,17 +34,13 @@ def arbitrary_query(sql: str) -> int:
     return 0
 
 
-def select_query(table: str, columns: list[str], condition: str) -> int or list:
-    columns_str = ", ".join(columns)
-    sql = f"SELECT {columns_str} FROM {table} WHERE {condition};"
-
+def select_query(sql: str, params: tuple) -> int or list[dict[str, any]]:
     try:
         with connect() as con:
             cur = con.cursor()
-            cur.execute(sql)
+            cur.execute(sql, params)
             res = cur.fetchall()
-            res_mapped = [{f"{col}": f"{val}" for col, val in zip(columns, vals)} for vals in res]
-            return res_mapped
+            return res
     except psycopg2.Error as err:
         return int(err.pgcode)
 
