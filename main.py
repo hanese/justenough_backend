@@ -1,4 +1,3 @@
-from fastapi.middleware.cors import CORSMiddleware
 from datetime import timedelta
 from typing import Annotated
 
@@ -8,7 +7,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 import connection_manager
 from connection_manager import User, check_password_complexity, register_user, verify_user, get_user, get_current_user, \
     Token
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import ingredients

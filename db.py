@@ -6,7 +6,7 @@ def connect():
     conn = psycopg2.connect(host="localhost",
                             database="justenough",
                             user="postgres",
-                            password="postgres")
+                            password=os.getenv("pgpwd"))
     return conn
 
 
