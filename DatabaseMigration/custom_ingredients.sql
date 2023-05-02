@@ -7,7 +7,9 @@ create table custom_ingredients
             on delete cascade,
     uuid         uuid    not null
         constraint custom_ingredients_pk
-            primary key
+            primary key,
+    constraint custom_ingredients_pk2
+        unique (ingredient, belongs_user)
 );
 
 alter table custom_ingredients

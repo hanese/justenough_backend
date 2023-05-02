@@ -6,8 +6,10 @@ create table shopping_list
     shopping_item varchar not null,
     belongs_user  varchar not null
         constraint shopping_list_users_username_fk
-            references public.users
-            on delete cascade
+            references users
+            on delete cascade,
+    constraint shopping_list_pk2
+        unique (belongs_user, shopping_item)
 );
 
 alter table shopping_list

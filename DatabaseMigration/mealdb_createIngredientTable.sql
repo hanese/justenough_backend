@@ -1,8 +1,13 @@
-CREATE TABLE IF NOT EXISTS public.ingredient
+create table ingredient
 (
-    id integer PRIMARY KEY,
-    ingredient character varying COLLATE pg_catalog."default",
-    description character varying COLLATE pg_catalog."default",
-    type character varying COLLATE pg_catalog."default"
+    id          integer not null
+        constraint ingredients_pkey
+            primary key,
+    ingredient  varchar,
+    description varchar,
+    type        varchar
+);
 
-)
+alter table ingredient
+    owner to postgres;
+

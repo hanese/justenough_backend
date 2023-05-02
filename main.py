@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import FastAPI, Depends, HTTPException, status, Response
+from fastapi import FastAPI, Depends, HTTPException, status, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
 import connection_manager
@@ -9,7 +9,8 @@ from connection_manager import User, check_password_complexity, register_user, v
     Token
 from fastapi.middleware.cors import CORSMiddleware
 
-import ingredients
+from ingredients import add_custom_ingredient, get_all_ingredients, get_customs, CustomIngredient, Ingredient
+from shopping import get_shopping, add_shopping_item
 
 app = FastAPI()
 
@@ -40,7 +41,8 @@ async def say_hello(name: str):
 
 @app.get("/api/ingredients/getAll")
 async def get_ingredients():
-    return await ingredients.get_all_ingredients()
+    return await get_all_ingredients()
+
 
 @app.post("/login", response_model=Token)
 async def login_for_access_token(
@@ -72,3 +74,34 @@ async def register(user: User, response: Response):
         return {"detail": "Password not complex enough"}
     response.headers.append("Access-Control-Allow-Origin", "https://www.justenough.server-welt.com")
     return await register_user(**user.dict())
+
+
+@app.post("/api/ingredients/postCustomIngredient/")
+async def post_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], custom: Ingredient,
+                                 response: Response):
+    sql_state = await add_custom_ingredient(current_user, custom)
+    if sql_state == 0:
+        response.status_code = 201
+    else:
+        return sql_state
+
+
+@app.get("/api/ingredients/getCustomIngredients")
+async def get_custom_ingredients(current_user: Annotated[User, Depends(get_current_user)]):
+    custom_ingredients = await get_customs(current_user)
+    return custom_ingredients
+
+
+@app.post("/api/shopping/postShoppingItem")
+async def post_shopping_item(current_user: Annotated[User, Depends(get_current_user)], ingredient: Ingredient,response: Response):
+    sql_state = await add_shopping_item(current_user, ingredient)
+    if sql_state == 0:
+        response.status_code = 201
+    else:
+        return sql_state
+
+
+@app.get("/api/shopping/getShoppingItems")
+async def get_shopping_items(current_user: Annotated[User, Depends(get_current_user)]):
+    shopping_items = await get_shopping(current_user)
+    return shopping_items
