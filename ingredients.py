@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from starlette.requests import Request
 
 import db
-from db import mapped_select_query, select_query, insert_query
+from db import mapped_select_query, select_query, insert_query, delete_query, update_query
 from connection_manager import User
 
 
@@ -35,4 +35,8 @@ async def get_customs(current_user: User):
 
 
 async def delete_custom(uuid_custom: str):
-    return db.delete_query("custom_ingredients", f"uuid = '{uuid_custom}'")
+    return delete_query("custom_ingredients", f"uuid = '{uuid_custom}'")
+
+
+async def update_custom(uuid_custom: str, new_name):
+    return update_query("custom_ingredients", "ingredient", f"uuid = '{uuid_custom}'", new_name)

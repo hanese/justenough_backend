@@ -56,6 +56,17 @@ def delete_query(table: str, condition: str) -> any:
     return 0
 
 
+def update_query(table: str, column: str, condition: str, new_name: str) -> any:
+    sql = f"UPDATE {table} SET {column} = '{new_name}' WHERE {condition};"
+    try:
+        with connect() as con:
+            cur = con.cursor()
+            cur.execute(sql)
+    except psycopg2.DatabaseError as err:
+        return int(err.pgcode)
+    return 0
+
+
 def mapped_select_query(table: str, columns: list[str], condition: str) -> int or list:
     columns_str = ", ".join(columns)
     sql = f"SELECT {columns_str} FROM {table} WHERE {condition};"

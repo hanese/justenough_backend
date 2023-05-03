@@ -1,5 +1,6 @@
+import db
 from connection_manager import User
-from db import mapped_select_query, insert_query, delete_query
+from db import mapped_select_query, insert_query, delete_query, update_query
 import uuid
 
 
@@ -14,3 +15,7 @@ async def add_shopping_item(current_user, ingredient):
 
 async def delete_item(item_uuid):
     return delete_query("shopping_list", f"uuid = '{item_uuid}'")
+
+
+async def update_item(item_uuid, new_name):
+    return update_query("shopping_list", "shopping_item", f"uuid = '{item_uuid}'", new_name)

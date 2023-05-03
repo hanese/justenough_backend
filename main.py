@@ -9,8 +9,8 @@ from connection_manager import User, check_password_complexity, register_user, v
     Token
 from fastapi.middleware.cors import CORSMiddleware
 
-from ingredients import add_custom_ingredient, get_all_ingredients, get_customs, CustomIngredient, Ingredient, delete_custom
-from shopping import get_shopping, add_shopping_item, delete_item
+from ingredients import add_custom_ingredient, get_all_ingredients, get_customs, CustomIngredient, Ingredient, delete_custom, update_custom
+from shopping import get_shopping, add_shopping_item, delete_item, update_item
 
 app = FastAPI()
 
@@ -98,6 +98,12 @@ async def delete_custom_ingredient(current_user: Annotated[User, Depends(get_cur
     return sql_state
 
 
+@app.put("/api/ingredients/updateCustomIngredient/{uuid}")
+async def update_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], uuid: str, ingredient: Ingredient):
+    sql_state = await update_custom(uuid, ingredient.ingredient)
+    return sql_state
+
+
 @app.post("/api/shopping/postShoppingItem")
 async def post_shopping_item(current_user: Annotated[User, Depends(get_current_user)], ingredient: Ingredient,response: Response):
     sql_state = await add_shopping_item(current_user, ingredient)
@@ -116,4 +122,10 @@ async def get_shopping_items(current_user: Annotated[User, Depends(get_current_u
 @app.delete("/api/shopping/deleteShoppingItem/{uuid}")
 async def delete_shopping_item(current_user: Annotated[User, Depends(get_current_user)], uuid: str):
     sql_state = await delete_item(uuid)
+    return sql_state
+
+
+@app.put("/api/shopping/updateShoppingItem/{uuid}")
+async def update_shopping_item(current_user: Annotated[User, Depends(get_current_user)], uuid: str, new_name: str):
+    sql_state = await update_item(uuid, new_name)
     return sql_state
