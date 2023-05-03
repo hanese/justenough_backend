@@ -1,4 +1,4 @@
-create table ingredient
+create table ingredients
 (
     id          integer not null
         constraint ingredients_pkey
@@ -8,6 +8,6 @@ create table ingredient
     type        varchar
 );
 
-alter table ingredient
+alter table ingredients
     owner to postgres;
 

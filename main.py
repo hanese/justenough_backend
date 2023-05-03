@@ -9,8 +9,8 @@ from connection_manager import User, check_password_complexity, register_user, v
     Token
 from fastapi.middleware.cors import CORSMiddleware
 
-from ingredients import add_custom_ingredient, get_all_ingredients, get_customs, CustomIngredient, Ingredient
-from shopping import get_shopping, add_shopping_item
+from ingredients import add_custom_ingredient, get_all_ingredients, get_customs, CustomIngredient, Ingredient, delete_custom
+from shopping import get_shopping, add_shopping_item, delete_item
 
 app = FastAPI()
 
@@ -61,13 +61,13 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=User)
+@app.get("/users/me", response_model=User)
 async def read_users_me(
         current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
 
 
-@app.post("/register/")
+@app.post("/register")
 async def register(user: User, response: Response):
     if not await check_password_complexity(user.password):
         response.status_code = 406
@@ -76,7 +76,7 @@ async def register(user: User, response: Response):
     return await register_user(**user.dict())
 
 
-@app.post("/api/ingredients/postCustomIngredient/")
+@app.post("/api/ingredients/postCustomIngredient")
 async def post_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], custom: Ingredient,
                                  response: Response):
     sql_state = await add_custom_ingredient(current_user, custom)
@@ -92,6 +92,12 @@ async def get_custom_ingredients(current_user: Annotated[User, Depends(get_curre
     return custom_ingredients
 
 
+@app.delete("/api/ingredients/deleteCustomIngredient/{uuid}")
+async def delete_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], uuid: str):
+    sql_state = await delete_custom(uuid)
+    return sql_state
+
+
 @app.post("/api/shopping/postShoppingItem")
 async def post_shopping_item(current_user: Annotated[User, Depends(get_current_user)], ingredient: Ingredient,response: Response):
     sql_state = await add_shopping_item(current_user, ingredient)
@@ -105,3 +111,9 @@ async def post_shopping_item(current_user: Annotated[User, Depends(get_current_u
 async def get_shopping_items(current_user: Annotated[User, Depends(get_current_user)]):
     shopping_items = await get_shopping(current_user)
     return shopping_items
+
+
+@app.delete("/api/shopping/deleteShoppingItem/{uuid}")
+async def delete_shopping_item(current_user: Annotated[User, Depends(get_current_user)], uuid: str):
+    sql_state = await delete_item(uuid)
+    return sql_state

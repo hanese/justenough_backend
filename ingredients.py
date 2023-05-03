@@ -32,3 +32,7 @@ async def get_customs(current_user: User):
     customs = mapped_select_query("custom_ingredients", ["uuid", "ingredient", "belongs_user"],
                                   f"belongs_user = '{current_user.username}'")
     return customs
+
+
+async def delete_custom(uuid_custom: str):
+    return db.delete_query("custom_ingredients", f"uuid = '{uuid_custom}'")
