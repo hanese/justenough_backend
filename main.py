@@ -99,8 +99,8 @@ async def delete_custom_ingredient(current_user: Annotated[User, Depends(get_cur
 
 
 @app.put("/api/ingredients/updateCustomIngredient/{uuid}")
-async def update_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], uuid: str, ingredient: Ingredient):
-    sql_state = await update_custom(uuid, ingredient.ingredient)
+async def update_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], uuid: str, new_name: str):
+    sql_state = await update_custom(uuid, new_name)
     return sql_state
 
 
