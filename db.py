@@ -56,8 +56,8 @@ def delete_query(table: str, condition: str) -> any:
     return 0
 
 
-def update_query(table: str, column: str, condition: str, new_name: str) -> any:
-    sql = f"UPDATE {table} SET {column} = '{new_name}' WHERE {condition};"
+def update_query(table: str, column: str, condition: str, updated_value: str) -> any:
+    sql = f"UPDATE {table} SET {column} = '{updated_value}' WHERE {condition};"
     try:
         with connect() as con:
             cur = con.cursor()

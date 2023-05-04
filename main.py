@@ -9,8 +9,9 @@ from connection_manager import User, check_password_complexity, register_user, v
     Token
 from fastapi.middleware.cors import CORSMiddleware
 
-from ingredients import add_custom_ingredient, get_all_ingredients, get_customs, CustomIngredient, Ingredient, delete_custom, update_custom
-from shopping import get_shopping, add_shopping_item, delete_item, update_item
+from ingredients import *
+from shopping import *
+from storage import *
 
 app = FastAPI()
 
@@ -31,12 +32,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return "Hello World"
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+    return "Welcome in the JustEnough-World"
 
 
 @app.get("/api/ingredients/getAll")
@@ -98,15 +94,15 @@ async def delete_custom_ingredient(current_user: Annotated[User, Depends(get_cur
     return sql_state
 
 
-@app.put("/api/ingredients/updateCustomIngredient/{uuid}")
-async def update_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], uuid: str, new_name: str):
-    sql_state = await update_custom(uuid, new_name)
+@app.put("/api/ingredients/updateCustomIngredient/{CustomIngredientUuid}")
+async def update_custom_ingredient(current_user: Annotated[User, Depends(get_current_user)], custom_ingredient_uuid: str, new_name: str):
+    sql_state = await update_custom(custom_ingredient_uuid, new_name)
     return sql_state
 
 
 @app.post("/api/shopping/postShoppingItem")
 async def post_shopping_item(current_user: Annotated[User, Depends(get_current_user)], ingredient: Ingredient,response: Response):
-    sql_state = await add_shopping_item(current_user, ingredient)
+    sql_state = await add_shopping(current_user, ingredient)
     if sql_state == 0:
         response.status_code = 201
     else:
@@ -121,11 +117,35 @@ async def get_shopping_items(current_user: Annotated[User, Depends(get_current_u
 
 @app.delete("/api/shopping/deleteShoppingItem/{uuid}")
 async def delete_shopping_item(current_user: Annotated[User, Depends(get_current_user)], uuid: str):
-    sql_state = await delete_item(uuid)
+    sql_state = await delete_shopping(uuid)
     return sql_state
 
 
-@app.put("/api/shopping/updateShoppingItem/{uuid}")
-async def update_shopping_item(current_user: Annotated[User, Depends(get_current_user)], uuid: str, new_name: str):
-    sql_state = await update_item(uuid, new_name)
+@app.put("/api/shopping/updateShoppingItem/{shoppingItemUuid}")
+async def update_shopping_item(current_user: Annotated[User, Depends(get_current_user)], shopping_item_uuid: str, new_name: str):
+    sql_state = await update_shopping(shopping_item_uuid, new_name)
+    return sql_state
+
+
+@app.post("/api/storage/postStorageItem")
+async def post_storage_item(current_user: Annotated[User, Depends(get_current_user)], item: Ingredient):
+    sql_state = await post_storage(current_user.username, item.ingredient)
+    return sql_state
+
+
+@app.get("/api/storage/getStorage")
+async def get_home_storage(current_user: Annotated[User, Depends(get_current_user)]):
+    sql_state = await get_storage(current_user.username)
+    return sql_state
+
+
+@app.put("/api/storage/updateItem/{storageItemUuid}")
+async def update_storage_item(current_user: Annotated[User, Depends(get_current_user)], storage_item_uuid: str, new_name: str):
+    sql_state = await update_storage(storage_item_uuid, new_name)
+    return sql_state
+
+
+@app.delete("/api/storage/deleteItem/{storageItemUuid")
+async def delete_storage_item(current_user: Annotated[User, Depends(get_current_user)], storage_item_uuid: str):
+    sql_state = await delete_shopping(storage_item_uuid)
     return sql_state
