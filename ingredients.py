@@ -19,7 +19,7 @@ class Ingredient(BaseModel):
 
 
 async def get_all_ingredients():
-    ingredient_list = mapped_select_query("ingredient", ["uuid", "ingredient", "belongs_user"], "True")
+    ingredient_list = mapped_select_query("ingredients", ["id", "ingredient", "description", "type"], "True")
     return ingredient_list
 
 
