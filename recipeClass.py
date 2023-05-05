@@ -1,0 +1,55 @@
+from pydantic import BaseModel
+
+
+class Custom_Recipe(BaseModel):
+    meal: str
+    category: str
+    area: str
+    instructions: str
+    meal_thumb: str
+    tags: str
+    youtube: str
+    ingredient1: str
+    ingredient2: str
+    ingredient3: str
+    ingredient4: str
+    ingredient5: str
+    ingredient6: str
+    ingredient7: str
+    ingredient8: str
+    ingredient9: str
+    ingredient10: str
+    ingredient11: str
+    ingredient12: str
+    ingredient13: str
+    ingredient14: str
+    ingredient15: str
+    ingredient16: str
+    ingredient17: str
+    ingredient18: str
+    ingredient19: str
+    ingredient20: str
+    measure1: str
+    measure2: str
+    measure3: str
+    measure4: str
+    measure5: str
+    measure6: str
+    measure7: str
+    measure8: str
+    measure9: str
+    measure10: str
+    measure11: str
+    measure12: str
+    measure13: str
+    measure14: str
+    measure15: str
+    measure16: str
+    measure17: str
+    measure18: str
+    measure19: str
+    measure20: str
+    source: str
+    image_source: str
+    creative_commons_confirmed: str
+    date_modified: str

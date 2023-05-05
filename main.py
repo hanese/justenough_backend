@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from ingredients import *
 from shopping import *
 from storage import *
+from recipes import *
 
 app = FastAPI()
 
@@ -39,6 +40,9 @@ async def root():
 async def get_ingredients():
     return await get_all_ingredients()
 
+@app.get("/api/recipes/getAll")
+async def get_recipes():
+    return await get_all_recipes()
 
 @app.post("/login", response_model=Token)
 async def login_for_access_token(
@@ -149,3 +153,28 @@ async def update_storage_item(current_user: Annotated[User, Depends(get_current_
 async def delete_storage_item(current_user: Annotated[User, Depends(get_current_user)], storage_item_uuid: str):
     sql_state = await delete_shopping(storage_item_uuid)
     return sql_state
+
+
+@app.post("/api/recipes/postCustomRecipe")
+async def post_custom_recipe(current_user: Annotated[User, Depends(get_current_user)], recipe: Custom_Recipe):
+    sql_state = await post_recipe(current_user.username, recipe)
+    return sql_state
+
+
+@app.get("/api/recipes/getCustomRecipes")
+async def get_custom_recipes(current_user: Annotated[User, Depends(get_current_user)]):
+    sql_state = await get_recipes(current_user.username)
+    return sql_state
+
+
+@app.put("/api/recipes/updateRecipe/{recipeUuid}")
+async def update_custom_recipe(current_user: Annotated[User, Depends(get_current_user)], recipe_uuid: str, new_name: str):
+    sql_state = await update_recipe(recipe_uuid, new_name)
+    return sql_state
+
+
+@app.delete("/api/recipes/deleteRecipe/{recipeUuid}")
+async def delete_custom_recipe(current_user: Annotated[User, Depends(get_current_user)], recipe_uuid: str):
+    sql_state = await delete_recipe(recipe_uuid)
+    return sql_state
+
