@@ -1,0 +1,63 @@
+create table custom_recipes
+(
+    uuid                       integer not null
+        primary key,
+    meal                       varchar,
+    category                   varchar,
+    area                       varchar,
+    instructions               varchar,
+    meal_thumb                 varchar,
+    tags                       varchar,
+    youtube                    varchar,
+    ingredient1                varchar,
+    ingredient2                varchar,
+    ingredient3                varchar,
+    ingredient4                varchar,
+    ingredient5                varchar,
+    ingredient6                varchar,
+    ingredient7                varchar,
+    ingredient8                varchar,
+    ingredient9                varchar,
+    ingredient10               varchar,
+    ingredient11               varchar,
+    ingredient12               varchar,
+    ingredient13               varchar,
+    ingredient14               varchar,
+    ingredient15               varchar,
+    ingredient16               varchar,
+    ingredient17               varchar,
+    ingredient18               varchar,
+    ingredient19               varchar,
+    ingredient20               varchar,
+    measure1                   varchar,
+    measure2                   varchar,
+    measure3                   varchar,
+    measure4                   varchar,
+    measure5                   varchar,
+    measure6                   varchar,
+    measure7                   varchar,
+    measure8                   varchar,
+    measure9                   varchar,
+    measure10                  varchar,
+    measure11                  varchar,
+    measure12                  varchar,
+    measure13                  varchar,
+    measure14                  varchar,
+    measure15                  varchar,
+    measure16                  varchar,
+    measure17                  varchar,
+    measure18                  varchar,
+    measure19                  varchar,
+    measure20                  varchar,
+    source                     varchar,
+    image_source               varchar,
+    creative_commons_confirmed varchar,
+    date_modified              varchar,
+    belongs_user               varchar not null
+        constraint custom_recipes_users_username_fk
+            references users
+);
+
+alter table custom_recipes
+    owner to postgres;
+
