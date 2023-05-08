@@ -1,7 +1,6 @@
 import db
 import pandas as pd
 import re
-import numpy as np
 
 class logic:
     recipeDF = pd.DataFrame()
@@ -12,8 +11,6 @@ class logic:
         output = db.select_query("recipe", self.recipeDBColumns, "true")
         self.recipeDF = pd.DataFrame.from_dict(output)
         connection.close()
-
-        #print(self.recipeDF)
 
     def getRecipes(self, ingredientList):
         d = {'id': [], 'matches': []}
@@ -35,12 +32,9 @@ class logic:
         MatchesDF.sort_values(by=['matches'], ascending=False, inplace=True)
 
         resDF = pd.DataFrame(columns=self.recipeDBColumns)
-        #resDF.reset_index(inplace=True)
         for recipe in MatchesDF.iloc:
             newRow = self.recipeDF.loc[self.recipeDF['id'] == recipe['id']]
-            test = len(newRow.columns)
-            test2 = len(self.recipeDBColumns)
-            resDF.loc[len(resDF)] = newRow
+            resDF = pd.concat([resDF, newRow], ignore_index=True)
 
         return resDF
 
@@ -57,8 +51,10 @@ class logic:
 
 
 
-test = logic()
-test2 = print(test.getRecipes(['butter']))
-#print(test2.sort_values(by=['matches'], ascending=False))
 
-#print(test.recipeDF.loc[test.recipeDF['id'] == '52768'])
+#Beispiel (hier mit "butter")
+"""
+test = logic()
+test2 = test.getRecipes(['butter'])
+print(test2.iloc[0])
+"""
