@@ -30,13 +30,12 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return "Hello from the FastAPI-World"
+    return "Welcome in the JustEnough-World"
 
 
 @app.get("/api/ingredients/getAll")
 async def get_ingredients():
     return await ingredients.get_all_ingredients()
-
 
 @app.post("/login", response_model=Token)
 async def login_for_access_token(

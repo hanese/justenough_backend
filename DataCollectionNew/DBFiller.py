@@ -6,7 +6,7 @@ dg = dataGrabber.dataGrabber()
 
 
 db.arbitrary_query("truncate recipe cascade;")
-db.arbitrary_query("truncate ingredient cascade;")
+db.arbitrary_query("truncate ingredients cascade;")
 
 
 def add_recipe(insertLetter):
@@ -31,7 +31,7 @@ def add_ingredient():
             sql_list.append(ingredient)
 
     for sql_ingredient in sql_list:
-        db.insert_query_no_columns("ingredient", sql_ingredient)
+        db.insert_query_no_columns("ingredients", sql_ingredient)
     return True
 
 

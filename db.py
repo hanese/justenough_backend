@@ -45,6 +45,28 @@ def select_query(sql: str, params: tuple) -> int or list[dict[str, any]]:
         return int(err.pgcode)
 
 
+def delete_query(table: str, condition: str) -> any:
+    sql = f"DELETE FROM {table} WHERE {condition};"
+    try:
+        with connect() as con:
+            cur = con.cursor()
+            cur.execute(sql)
+    except psycopg2.DatabaseError as err:
+        return int(err.pgcode)
+    return 0
+
+
+def update_query(table: str, column: str, condition: str, updated_value: str) -> any:
+    sql = f"UPDATE {table} SET {column} = '{updated_value}' WHERE {condition};"
+    try:
+        with connect() as con:
+            cur = con.cursor()
+            cur.execute(sql)
+    except psycopg2.DatabaseError as err:
+        return int(err.pgcode)
+    return 0
+
+
 def mapped_select_query(table: str, columns: list[str], condition: str) -> int or list:
     columns_str = ", ".join(columns)
     sql = f"SELECT {columns_str} FROM {table} WHERE {condition};"
