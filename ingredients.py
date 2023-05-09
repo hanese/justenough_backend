@@ -18,7 +18,7 @@ class Ingredient(BaseModel):
     ingredient: str
 
 
-async def get_all_ingredients():
+async def get_ingredients():
     ingredient_list = mapped_select_query("ingredients", ["id", "ingredient", "description", "type"], "True")
     return ingredient_list
 

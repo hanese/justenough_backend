@@ -2,54 +2,54 @@ from pydantic import BaseModel
 
 
 class Custom_Recipe(BaseModel):
-    meal: str
-    category: str
-    area: str
-    instructions: str
-    meal_thumb: str
-    tags: str
-    youtube: str
-    ingredient1: str
-    ingredient2: str
-    ingredient3: str
-    ingredient4: str
-    ingredient5: str
-    ingredient6: str
-    ingredient7: str
-    ingredient8: str
-    ingredient9: str
-    ingredient10: str
-    ingredient11: str
-    ingredient12: str
-    ingredient13: str
-    ingredient14: str
-    ingredient15: str
-    ingredient16: str
-    ingredient17: str
-    ingredient18: str
-    ingredient19: str
-    ingredient20: str
-    measure1: str
-    measure2: str
-    measure3: str
-    measure4: str
-    measure5: str
-    measure6: str
-    measure7: str
-    measure8: str
-    measure9: str
-    measure10: str
-    measure11: str
-    measure12: str
-    measure13: str
-    measure14: str
-    measure15: str
-    measure16: str
-    measure17: str
-    measure18: str
-    measure19: str
-    measure20: str
-    source: str
-    image_source: str
-    creative_commons_confirmed: str
-    date_modified: str
+    meal: str = "Null"
+    category: str = "Null"
+    area: str = "Null"
+    instructions: str = "Null"
+    meal_thumb: str = "Null"
+    tags: str = "Null"
+    youtube: str = "Null"
+    ingredient1: str = "Null"
+    ingredient2: str = "Null"
+    ingredient3: str = "Null"
+    ingredient4: str = "Null"
+    ingredient5: str = "Null"
+    ingredient6: str = "Null"
+    ingredient7: str = "Null"
+    ingredient8: str = "Null"
+    ingredient9: str = "Null"
+    ingredient10: str = "Null"
+    ingredient11: str = "Null"
+    ingredient12: str = "Null"
+    ingredient13: str = "Null"
+    ingredient14: str = "Null"
+    ingredient15: str = "Null"
+    ingredient16: str = "Null"
+    ingredient17: str = "Null"
+    ingredient18: str = "Null"
+    ingredient19: str = "Null"
+    ingredient20: str = "Null"
+    measure1: str = "Null"
+    measure2: str = "Null"
+    measure3: str = "Null"
+    measure4: str = "Null"
+    measure5: str = "Null"
+    measure6: str = "Null"
+    measure7: str = "Null"
+    measure8: str = "Null"
+    measure9: str = "Null"
+    measure10: str = "Null"
+    measure11: str = "Null"
+    measure12: str = "Null"
+    measure13: str = "Null"
+    measure14: str = "Null"
+    measure15: str = "Null"
+    measure16: str = "Null"
+    measure17: str = "Null"
+    measure18: str = "Null"
+    measure19: str = "Null"
+    measure20: str = "Null"
+    source: str = "Null"
+    image_source: str = "Null"
+    creative_commons_confirmed: str = "Null"
+    date_modified: str = "Null"

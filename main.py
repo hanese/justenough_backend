@@ -37,12 +37,19 @@ async def root():
 
 
 @app.get("/api/ingredients/getAll")
-async def get_ingredients():
-    return await get_all_ingredients()
+async def get_all_ingredients():
+    return await get_ingredients()
+
 
 @app.get("/api/recipes/getAll")
-async def get_recipes():
-    return await get_all_recipes()
+async def get_all_recipes():
+    return await get_recipes()
+
+
+@app.get("/api/recipes/getRecipe/{uuid}")
+async def get_recipe_by_id(recipe_id: str):
+    return await get_full_recipe(recipe_id)
+
 
 @app.post("/login", response_model=Token)
 async def login_for_access_token(
@@ -149,7 +156,7 @@ async def update_storage_item(current_user: Annotated[User, Depends(get_current_
     return sql_state
 
 
-@app.delete("/api/storage/deleteItem/{storageItemUuid")
+@app.delete("/api/storage/deleteItem/{storageItemUuid}")
 async def delete_storage_item(current_user: Annotated[User, Depends(get_current_user)], storage_item_uuid: str):
     sql_state = await delete_shopping(storage_item_uuid)
     return sql_state
@@ -163,13 +170,13 @@ async def post_custom_recipe(current_user: Annotated[User, Depends(get_current_u
 
 @app.get("/api/recipes/getCustomRecipes")
 async def get_custom_recipes(current_user: Annotated[User, Depends(get_current_user)]):
-    sql_state = await get_recipes(current_user.username)
-    return sql_state
+    custom_recipes = await get_recipes_by_username(current_user.username)
+    return custom_recipes
 
 
 @app.put("/api/recipes/updateRecipe/{recipeUuid}")
-async def update_custom_recipe(current_user: Annotated[User, Depends(get_current_user)], recipe_uuid: str, new_name: str):
-    sql_state = await update_recipe(recipe_uuid, new_name)
+async def update_custom_recipe(current_user: Annotated[User, Depends(get_current_user)], recipe_uuid: str, column: str, updated_value: str):
+    sql_state = await update_recipe(recipe_uuid, column, updated_value)
     return sql_state
 
 
