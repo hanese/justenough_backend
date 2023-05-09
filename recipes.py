@@ -10,16 +10,16 @@ async def get_recipes():
 
 
 async def get_full_recipe(recipe_id: str):
-    if recipe_id.__contains__("-"):
-        return mapped_select_query("recipe", ["*"], f"id = '{recipe_id}'")
-    elif not recipe_id.__contains__("-"):
-        return mapped_select_query("custom_recipe", ["*"], f"uuid = '{recipe_id}'")
+    if not recipe_id.__contains__("-"):
+        return mapped_select_query("recipe", list(dict(Custom_Recipe()).keys()), f"id = '{recipe_id}'")
+    elif recipe_id.__contains__("-"):
+        return mapped_select_query("custom_recipes", list(dict(Custom_Recipe()).keys()), f"uuid = '{recipe_id}'")
     else:
         return None
 
 
 async def get_recipes_by_username(username):
-    return mapped_select_query("custom_recipes", ["*"], f"belongs_user = '{username}'")
+    return mapped_select_query("custom_recipes", ["uuid", "meal"], f"belongs_user = '{username}'")
 
 
 async def post_recipe(username, recipe: Custom_Recipe):

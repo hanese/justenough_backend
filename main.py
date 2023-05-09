@@ -46,7 +46,7 @@ async def get_all_recipes():
     return await get_recipes()
 
 
-@app.get("/api/recipes/getRecipe/{uuid}")
+@app.get("/api/recipes/getRecipe/{recipe_id}")
 async def get_recipe_by_id(recipe_id: str):
     return await get_full_recipe(recipe_id)
 
