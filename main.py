@@ -30,17 +30,13 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return "Hello World"
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+    return "Hello from the FastAPI-World"
 
 
 @app.get("/api/ingredients/getAll")
 async def get_ingredients():
     return await ingredients.get_all_ingredients()
+
 
 @app.post("/login", response_model=Token)
 async def login_for_access_token(
