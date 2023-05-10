@@ -14,6 +14,7 @@ from shopping import *
 from storage import *
 from recipes import *
 from recipe_logic import *
+from custom_recipe_logic import *
 
 app = FastAPI()
 
@@ -190,7 +191,16 @@ async def delete_custom_recipe(current_user: Annotated[User, Depends(get_current
 @app.get("/api/recipes/getRecipesByIngredients/")
 async def get_recipes_by_ingredients(ingredients: Annotated[list, Query()]):
     recipeList = []
-    df = logic().getRecipes(ingredients)
+    df = recipe_logic().getRecipes(ingredients)
+    for i in range(len(df)):
+        recipeList.append(df.iloc[i])
+    return recipeList
+
+
+@app.get("/api/recipes/getCustomRecipesByIngredients/")
+async def get_custom_recipes_by_ingredients(current_user: Annotated[User, Depends(get_current_user)], ingredients: Annotated[list, Query()]):
+    recipeList = []
+    df = custom_recipe_logic(current_user.username).getRecipes(ingredients)
     for i in range(len(df)):
         recipeList.append(df.iloc[i])
     return recipeList

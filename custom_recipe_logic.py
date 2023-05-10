@@ -3,9 +3,9 @@ import pandas as pd
 import re
 
 
-class recipe_logic:
+class custom_recipe_logic:
     recipeDF = pd.DataFrame()
-    recipeDBColumns = ["id", "meal", "drink_alternate", "category", "area", "instructions", "meal_thumb", "tags",
+    recipeDBColumns = ["uuid", "meal", "category", "area", "instructions", "meal_thumb", "tags",
                        "youtube", "ingredient1", "ingredient2", "ingredient3", "ingredient4", "ingredient5",
                        "ingredient6", "ingredient7", "ingredient8", "ingredient9", "ingredient10", "ingredient11",
                        "ingredient12", "ingredient13", "ingredient14", "ingredient15", "ingredient16", "ingredient17",
@@ -15,17 +15,17 @@ class recipe_logic:
                        "measure19", "measure20", "source", "image_source", "creative_commons_confirmed",
                        "date_modified"]
 
-    def __init__(self):
+    def __init__(self, username):
 
-        output = mapped_select_query("recipe", self.recipeDBColumns, "true")
+        output = mapped_select_query("custom_recipes", self.recipeDBColumns + ["belongs_user"], f"belongs_user = '{username}'")
         self.recipeDF = pd.DataFrame.from_dict(output)
 
     def getRecipes(self, ingredientList):
-        d = {'id': [], 'matches': []}
+        d = {'uuid': [], 'matches': []}
         MatchesDF = pd.DataFrame(data=d)
         for recipe in self.recipeDF.iloc():
             count = 0
-            id = recipe['id']
+            id = recipe['uuid']
             recipeIngredientList = self.getIngredientsAsList(id)
 
             for recipeIngredient in recipeIngredientList:
@@ -41,7 +41,7 @@ class recipe_logic:
 
         resDF = pd.DataFrame(columns=self.recipeDBColumns)
         for recipe in MatchesDF.iloc:
-            newRow = self.recipeDF.loc[self.recipeDF['id'] == recipe['id']]
+            newRow = self.recipeDF.loc[self.recipeDF['uuid'] == recipe['uuid']]
             resDF = pd.concat([resDF, newRow], ignore_index=True)
 
         return resDF
@@ -51,7 +51,7 @@ class recipe_logic:
                       "ingredient7", "ingredient8", "ingredient9", "ingredient10", "ingredient11", "ingredient12",
                       "ingredient13", "ingredient14", "ingredient15", "ingredient16", "ingredient17", "ingredient18",
                       "ingredient19", "ingredient20"]
-        row = self.recipeDF.loc[self.recipeDF["id"] == id]
+        row = self.recipeDF.loc[self.recipeDF["uuid"] == id]
         res = []
         for i in columnList:
             if row[i].iloc[0] != "None":
