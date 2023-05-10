@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import FastAPI, Depends, HTTPException, status, Response, Request
+from fastapi import FastAPI, Depends, HTTPException, status, Response, Request, Query
 from fastapi.security import OAuth2PasswordRequestForm
 
 import connection_manager
@@ -13,6 +13,7 @@ from ingredients import *
 from shopping import *
 from storage import *
 from recipes import *
+from recipe_logic import *
 
 app = FastAPI()
 
@@ -185,3 +186,11 @@ async def delete_custom_recipe(current_user: Annotated[User, Depends(get_current
     sql_state = await delete_recipe(recipe_uuid)
     return sql_state
 
+
+@app.get("/api/recipes/getRecipesByIngredients/")
+async def get_recipes_by_ingredients(ingredients: Annotated[list, Query()]):
+    recipeList = []
+    df = logic().getRecipes(ingredients)
+    for i in range(len(df)):
+        recipeList.append(df.iloc[i])
+    return recipeList
