@@ -189,7 +189,7 @@ async def delete_custom_recipe(current_user: Annotated[User, Depends(get_current
     return sql_state
 
 
-@app.get("/api/recipes/getRecipesByIngredients/")
+@app.get("/api/recipes/getRecipesByIngredients")
 async def get_recipes_by_ingredients(ingredients: Annotated[list, Query()]):
     recipeList = []
     df = recipe_logic().getRecipes(ingredients)
@@ -198,7 +198,7 @@ async def get_recipes_by_ingredients(ingredients: Annotated[list, Query()]):
     return recipeList
 
 
-@app.get("/api/recipes/getCustomRecipesByIngredients/")
+@app.get("/api/recipes/getCustomRecipesByIngredients")
 async def get_custom_recipes_by_ingredients(current_user: Annotated[User, Depends(get_current_user)], ingredients: Annotated[list, Query()]):
     recipeList = []
     df = custom_recipe_logic(current_user.username).getRecipes(ingredients)
