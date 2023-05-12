@@ -11,7 +11,7 @@ async def get_recipes():
 
 async def get_full_recipe(recipe_id: str):
     if not recipe_id.__contains__("-"):
-        return mapped_select_query("recipe", list(dict(Custom_Recipe()).keys()), f"id = '{recipe_id}'")
+        return mapped_select_query("recipe", list(dict(Custom_Recipe()).keys()), f"id = {recipe_id}")
     elif recipe_id.__contains__("-"):
         return mapped_select_query("custom_recipes", list(dict(Custom_Recipe()).keys()), f"uuid = '{recipe_id}'")
     else:
