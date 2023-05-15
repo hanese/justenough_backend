@@ -71,6 +71,12 @@ class User(BaseModel):
 app = FastAPI()
 
 
+def get_expiry(token):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    expiry = payload.get("exp")
+    return datetime.utcfromtimestamp(expiry)
+
+
 def get_user(username: str):
     user = db.select_query("SELECT username, password from users where username = %s", (username,))
     if user:

@@ -205,3 +205,8 @@ async def get_custom_recipes_by_ingredients(current_user: Annotated[User, Depend
     for i in range(len(df)):
         recipeList.append(df.iloc[i])
     return recipeList
+
+
+@app.get("/api/token/expiry/{token}")
+async def get_token_expiry(token):
+    return connection_manager.get_expiry(token)
