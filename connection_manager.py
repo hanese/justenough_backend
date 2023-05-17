@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 import re
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -72,9 +72,12 @@ app = FastAPI()
 
 
 def get_expiry(token):
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    expiry = payload.get("exp")
-    return datetime.utcfromtimestamp(expiry)
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        expiry = payload.get("exp")
+        return expiry
+    except JWTError:
+        return 0
 
 
 def get_user(username: str):
