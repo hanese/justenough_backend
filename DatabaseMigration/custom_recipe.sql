@@ -1,6 +1,6 @@
 create table custom_recipes
 (
-    uuid                       integer not null
+    uuid                       uuid not null
         primary key,
     meal                       varchar,
     category                   varchar,
