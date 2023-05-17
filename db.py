@@ -51,6 +51,7 @@ def delete_query(table: str, condition: str) -> any:
         with connect() as con:
             cur = con.cursor()
             cur.execute(sql)
+            a = cur.rowcount
     except psycopg2.DatabaseError as err:
         return int(err.pgcode)
     return 0

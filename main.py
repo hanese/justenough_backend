@@ -160,8 +160,8 @@ async def update_storage_item(current_user: Annotated[User, Depends(get_current_
 
 
 @app.delete("/api/storage/deleteItem/{storageItemUuid}")
-async def delete_storage_item(current_user: Annotated[User, Depends(get_current_user)], storage_item_uuid: str):
-    sql_state = await delete_shopping(storage_item_uuid)
+async def delete_storage_item(current_user: Annotated[User, Depends(get_current_user)], storageItemUuid: str):
+    sql_state = await delete_storage(storageItemUuid)
     return sql_state
 
 
