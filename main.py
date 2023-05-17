@@ -184,8 +184,8 @@ async def update_custom_recipe(current_user: Annotated[User, Depends(get_current
 
 
 @app.delete("/api/recipes/deleteRecipe/{recipeUuid}")
-async def delete_custom_recipe(current_user: Annotated[User, Depends(get_current_user)], recipe_uuid: str):
-    sql_state = await delete_recipe(recipe_uuid)
+async def delete_custom_recipe(current_user: Annotated[User, Depends(get_current_user)], recipeUuid: str):
+    sql_state = await delete_recipe(recipeUuid)
     return sql_state
 
 
