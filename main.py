@@ -22,7 +22,8 @@ origins = [
     "http://localhost",
     "http://localhost:8000",
     "http://localhost:5173",
-    "http://justenough.server-welt.com"
+    "http://justenough.server-welt.com",
+    "https://justenough.server-welt.com"
 ]
 
 app.add_middleware(
