@@ -20,6 +20,7 @@ class recipe_logic:
         output = mapped_select_query("recipe", self.recipeDBColumns, "true")
         self.recipeDF = pd.DataFrame.from_dict(output)
 
+    # use dataframes to return the recipes
     def getRecipes(self, ingredientList):
         d = {'id': [], 'matches': []}
         MatchesDF = pd.DataFrame(data=d)
@@ -46,6 +47,7 @@ class recipe_logic:
 
         return resDF
 
+    # returns the ingredients as a list
     def getIngredientsAsList(self, id: str):
         columnList = ["ingredient1", "ingredient2", "ingredient3", "ingredient4", "ingredient5", "ingredient6",
                       "ingredient7", "ingredient8", "ingredient9", "ingredient10", "ingredient11", "ingredient12",

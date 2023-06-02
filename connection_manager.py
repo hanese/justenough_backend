@@ -23,6 +23,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
+# registers a user in the database
 async def register_user(username: str, password: str):
     password = pwd_context.hash(password)
     with connect() as conn:
@@ -34,6 +35,7 @@ async def register_user(username: str, password: str):
                 raise HTTPException(status_code=409, detail="username already exists")
 
 
+# returns true if user is verified, false otherwise
 async def verify_user(username: str, password: str):
     res = db.select_query("SELECT password FROM users WHERE username = %s", (username,))
     if not res:
@@ -42,6 +44,7 @@ async def verify_user(username: str, password: str):
     return pwd_context.verify(password, res[0])
 
 
+# a function to check password complexity with regular expressions
 async def check_password_complexity(password: str):
     if len(password) < 8:
         return False
@@ -71,6 +74,7 @@ class User(BaseModel):
 app = FastAPI()
 
 
+# returns expiry date or, if token is expired, return 0
 def get_expiry(token):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -80,6 +84,7 @@ def get_expiry(token):
         return 0
 
 
+# returns current user
 def get_user(username: str):
     user = db.select_query("SELECT username, password from users where username = %s", (username,))
     if user:
@@ -87,6 +92,7 @@ def get_user(username: str):
     return False
 
 
+# creates an access token for authentication
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     if expires_delta:
@@ -98,6 +104,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 
+# returns the current user, mainly used to get user context in user-dependant requests
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

@@ -17,9 +17,11 @@ class custom_recipe_logic:
 
     def __init__(self, username):
 
-        output = mapped_select_query("custom_recipes", self.recipeDBColumns + ["belongs_user"], f"belongs_user = '{username}'")
+        output = mapped_select_query("custom_recipes", self.recipeDBColumns + ["belongs_user"],
+                                     f"belongs_user = '{username}'")
         self.recipeDF = pd.DataFrame.from_dict(output)
 
+    # use dataframes to return the recipes
     def getRecipes(self, ingredientList):
         d = {'uuid': [], 'matches': []}
         MatchesDF = pd.DataFrame(data=d)
@@ -46,6 +48,7 @@ class custom_recipe_logic:
 
         return resDF
 
+    # returns the ingredients as a list
     def getIngredientsAsList(self, id: str):
         columnList = ["ingredient1", "ingredient2", "ingredient3", "ingredient4", "ingredient5", "ingredient6",
                       "ingredient7", "ingredient8", "ingredient9", "ingredient10", "ingredient11", "ingredient12",
@@ -67,4 +70,3 @@ test = logic()
 test2 = test.getRecipes(['butter'])
 print(test2.iloc[0])
 """
-
